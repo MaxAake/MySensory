@@ -20,4 +20,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void toAccelerometer(View view) {
+        Intent intent = new Intent(this, AccelerometerActivity.class);
+        startActivity(intent);
+    }
+
 }

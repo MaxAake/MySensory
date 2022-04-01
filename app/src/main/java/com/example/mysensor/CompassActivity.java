@@ -63,9 +63,12 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
     public void onSensorChanged(SensorEvent event) {
 
         // get the angle around the z-axis rotated
-        float degree = Math.round(event.values[0]);
+        float division = (float) 10.0;
+        float degree = Math.round(event.values[0] * 10.0);
+        degree = degree / division;
 
-        //tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
+
+        tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
 
         // create a rotation animation (reverse turn degree degrees)
         RotateAnimation ra = new RotateAnimation(

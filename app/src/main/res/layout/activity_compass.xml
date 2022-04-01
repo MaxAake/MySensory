@@ -4,21 +4,23 @@
     android:layout_height="match_parent"
     android:background="#fff" >
 
+    <ImageView
+        android:id="@+id/imageViewCompass"
+        android:layout_width="364dp"
+        android:layout_height="359dp"
+        android:layout_below="@+id/tvHeading"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="171dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/compass_icon" />
+
     <TextView
         android:id="@+id/tvHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-        android:layout_marginTop="20dp"
-        android:text="Heading: 0.0" />
-
-    <ImageView
-        android:id="@+id/imageViewCompass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvHeading"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/compass_icon" />
+        android:text="Heading: 0 degrees"
+        android:textColor="#000" />
 
 </RelativeLayout>

@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MySensor">
         <activity
+            android:name=".AccelerometerActivity"
+            android:exported="false" />
+        <activity
             android:name=".CompassActivity"
             android:exported="false" />
         <activity
