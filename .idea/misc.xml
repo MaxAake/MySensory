@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Maxy/AndroidStudioProjects/MySensor/app/src/main/res/drawable/ic_launcher_background.xml" value="0.196" />
         <entry key="..\:/Users/Maxy/AndroidStudioProjects/MySensor/app/src/main/res/layout/activity_acceleratometer.xml" value="0.1" />
         <entry key="..\:/Users/Maxy/AndroidStudioProjects/MySensor/app/src/main/res/layout/activity_compass.xml" value="0.33" />
         <entry key="..\:/Users/Maxy/AndroidStudioProjects/MySensor/app/src/main/res/layout/activity_main.xml" value="0.33" />

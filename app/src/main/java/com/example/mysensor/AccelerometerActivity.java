@@ -11,6 +11,13 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 public class AccelerometerActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -21,6 +28,10 @@ public class AccelerometerActivity extends AppCompatActivity implements SensorEv
     TextView x;
     TextView y;
     TextView z;
+    long startTime;
+    MediaPlayer swing;
+    MediaPlayer backSwing;
+    double acc;
     float[] gravity;
 
     @Override
@@ -37,6 +48,12 @@ public class AccelerometerActivity extends AppCompatActivity implements SensorEv
 
         // initialize your android device sensor capabilities
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        swing = MediaPlayer.create(AccelerometerActivity.this, R.raw.swing);
+        backSwing = MediaPlayer.create(AccelerometerActivity.this, R.raw.backswing);
+        try{
+            swing.prepare();
+            backSwing.prepare();
+        }catch(Exception e){e.printStackTrace();}
     }
 
     @Override
@@ -63,10 +80,18 @@ public class AccelerometerActivity extends AppCompatActivity implements SensorEv
         if(event.sensor.getStringType().equals(Sensor.STRING_TYPE_ACCELEROMETER)) {
             float[] fact = event.values;
             float division = (float) 10.0;
-            x.setText("X acceleration: " + Float.toString(Math.round((fact[0] - gravity[0]) * 10) / division));
-            y.setText("Y acceleration: " + Float.toString(Math.round((fact[1] - gravity[1]) * 10) / division));
-            z.setText("Z acceleration: " + Float.toString(Math.round((fact[2] - gravity[2]) * 10) / division)
-            );
+            x.setText("X acceleration: " + Float.toString(Math.round((fact[0] - gravity[0]) * 10) / division) + "m/s");
+            y.setText("Y acceleration: " + Float.toString(Math.round((fact[1] - gravity[1]) * 10) / division) + "m/s");
+            z.setText("Z acceleration: " + Float.toString(Math.round((fact[2] - gravity[2]) * 10) / division) + "m/s");
+            long timeSinceStart = System.currentTimeMillis() - startTime;
+            if(Math.round((fact[2] - gravity[2]) * 10) / division > 5 && timeSinceStart > 1000) {
+               swing.start();
+               startTime = System.currentTimeMillis();
+            }
+            else if(Math.round((fact[2] - gravity[2]) * 10) / division < -5 && timeSinceStart > 1000) {
+                backSwing.start();
+                startTime = System.currentTimeMillis();
+            }
         }
         else if(event.sensor.getStringType().equals(Sensor.STRING_TYPE_GRAVITY)) {
             gravity = event.values;
