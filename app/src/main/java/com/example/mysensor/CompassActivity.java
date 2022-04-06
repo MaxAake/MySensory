@@ -1,32 +1,23 @@
 package com.example.mysensor;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.Arrays;
 import java.util.Random;
+import java.io.*;
 
 
 public class CompassActivity extends AppCompatActivity implements SensorEventListener {
 
     // define the display assembly compass picture
-    private int counter = 0;
-    private final int averageCount = 7;
-    private double[] angles = new double[averageCount];
-    private double angle;
-    Random rand = new Random();
+    private int averageLength = 15;
+    private float[] angles = new float[averageLength];
+    private float angle;
     private ImageView image;
     float[] rot = new float[9];
     float[] mag = new float[3];
@@ -76,36 +67,6 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-
-        // get the angle around the z-axis rotated
-        /*if(false ){ //event.sensor.getStringType().equals(Sensor.STRING_TYPE_ORIENTATION)) {
-            float division = (float) 10.0;
-            float degree = Math.round(event.values[0] * 10.0);
-            degree = degree / division;
-
-
-            tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
-
-            // create a rotation animation (reverse turn degree degrees)
-            RotateAnimation ra = new RotateAnimation(
-                    currentDegree,
-                    -degree,
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF,
-                    0.5f);
-
-            // how long the animation will take place
-            ra.setDuration(210);
-
-            // set the animation after the end of the reservation status
-            ra.setFillAfter(true);
-
-            // Start the animation
-            image.startAnimation(ra);
-            currentDegree = -degree;
-        }
-
-         */
         if ((event.sensor.getStringType().equals(Sensor.STRING_TYPE_GRAVITY))){
             grav = event.values;
         }
@@ -116,10 +77,60 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 
         SensorManager.getRotationMatrix(rot, null, grav, mag);
         SensorManager.getOrientation(rot, orient);
-        angle = orient[0];
-        angle = (Math.toDegrees(angle) + 360) % 360.0;
+        for(int i = 0; i < averageLength-1; i++){
+            angles[i+1] = angles[i];
+        }
+        angles[0] = orient[0];
+        angle = 0;
+        int numberNegative = 0;
+        int numberSmall = 0; //Detta hade varit lättare med vectors, men detta är mycket roligare
+        for(float i : angles) {
+            if(i < 0) {
+                numberNegative++;
+            }
+            if(Math.abs(i) < Math.PI/2){
+                numberSmall++;
+            }
+        }
+        if(numberNegative == 0 || numberNegative == averageLength || numberSmall>averageLength/2){
+            for(float i : angles) {
+                angle += i;
+            }
+            angle = (float) (angle / ((float) averageLength));
+        }
+        else{ //calculates the average as though we are around 360/0 degrees, this removes the problem of calculating the average around 180.
+            float[] flippedAngles = new float[averageLength];
+            int counter = 0;
+            for(float i : angles) {
+                if(i > 0){
+                    flippedAngles[counter] = (float) (Math.PI - i);
+                }
+                else {
+                    flippedAngles[counter] = (float) (-Math.PI - i);
+                }
+                counter++;
+            }
+            for(float i: flippedAngles) {
+                angle += i;
+            }
+            angle = (float) (angle / ((float) averageLength));
+            if(angle > 0) {
+                angle = (float) (Math.PI - angle);
+            }
+            else {
+                angle = (float) (-Math.PI - angle);
+            }
+
+        }
+
+        angle = (float) ((Math.toDegrees(angle) + 360) % 360.0);
         image.setRotation((float) -angle);
-        tvHeading.setText("Heading: " + Double.toString(angle) + " degrees");
+        String degreeText = Integer.toString((Math.round(angle)));
+
+        while(degreeText.length() < 3) {
+            degreeText = "0" + degreeText; //This stops the centered text in tvHeading from moving due to shifting length
+        }
+        tvHeading.setText("Heading: " + degreeText + " degrees");
 
     }
 
