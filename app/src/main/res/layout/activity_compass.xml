@@ -10,9 +10,20 @@
         android:layout_height="359dp"
         android:layout_below="@+id/tvHeading"
         android:layout_marginStart="23dp"
-        android:layout_marginTop="171dp"
+        android:layout_marginTop="175dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/compass_icon" />
+
+    <TextView
+        android:id="@+id/cardinal"
+        android:layout_width="83dp"
+        android:layout_height="42dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:text="N"
+        android:textColor="#00F"
+        android:textAlignment="center"
+        android:textSize="36sp" />
 
     <TextView
         android:id="@+id/tvHeading"

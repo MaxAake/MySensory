@@ -1,6 +1,8 @@
 package com.example.mysensor;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,6 +10,9 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
 import java.util.Random;
 import java.io.*;
 
@@ -31,6 +36,8 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 
     TextView tvHeading;
 
+    TextView cardinal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +48,8 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 
         // TextView that will tell the user what degree is he heading
         tvHeading = (TextView) findViewById(R.id.tvHeading);
+
+        cardinal = (TextView) findViewById(R.id.cardinal);
 
         // initialize your android device sensor capabilities
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -131,7 +140,38 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
             degreeText = "0" + degreeText; //This stops the centered text in tvHeading from moving due to shifting length
         }
         tvHeading.setText("Heading: " + degreeText + " degrees");
-
+        String direction = "N";
+        int color = Color.BLUE;
+        if (angle < 350 && angle > 280){
+            direction = "NW";
+            color=Color.GREEN;
+        }
+        else if (angle <= 280 && angle > 260){
+            direction = "W";
+            color=Color.GREEN;
+        }
+        else if (angle <= 260 && angle > 190){
+            direction = "SW";
+            color=Color.RED;
+        }
+        else if (angle <= 190 && angle > 170){
+            direction = "S";
+            color=Color.RED;
+        }
+        else if (angle <= 170 && angle > 100){
+            direction = "SE";
+            color=Color.RED;
+        }
+        else if (angle <= 100 && angle > 80){
+            direction = "E";
+            color=Color.GREEN;
+        }
+        else if (angle <= 80 && angle > 10) {
+            direction = "NE";
+            color=Color.GREEN;
+        }
+        cardinal.setText(direction);
+        cardinal.setTextColor(color);
     }
 
     @Override
